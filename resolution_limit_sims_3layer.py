@@ -82,11 +82,18 @@ def cost_function(params, *args):
     return sum((E_sam - E_teo)**2)
 
 
-def sim_traces():
+def sim_traces(working_dir, e_s_sim_i, e_inf_sim_i, tau_sim_i,
+               e_s_sim_m, e_inf_sim_m, tau_sim_m,
+               e_s_sim_o, e_inf_sim_o, tau_sim_o):
     t0 = time_ns()
-    out_dir = './output/traces/'
-    in_dir = './output/refs/'
+    # out_dir = './output/traces/'
+    # in_dir = './output/refs/'
+    out_dir = './output/simulation_results/' + working_dir + '/traces/'
+    in_dir = './output/simulation_results/' + working_dir + '/refs/'
     ref_list = os.listdir(in_dir)
+    working_dir = './output/simulation_results/' + working_dir + '/'
+    if not os.path.isdir(working_dir):
+        os.mkdir(working_dir)
     if not os.path.isdir(out_dir):
         os.mkdir(out_dir)
     for trash_file in os.listdir(out_dir):
@@ -102,17 +109,23 @@ def sim_traces():
         ns_level = ref_file.split('_')[0]
         
         # material data
-        e_s_sim_i = 1.5**2
-        e_inf_sim_i = 1.7**2
-        tau_sim_i = 1e-13
+        # e_s_sim_i = 1.5**2
+        # e_inf_sim_i = 1.7**2
+        # tau_sim_i = 1e-13
+        e_s_sim_i = e_s_sim_i ** 2
+        e_inf_sim_i = e_inf_sim_i ** 2
         n_sim_i, k_sim_i = nk_from_eps(e_s_sim_i, e_inf_sim_i, tau_sim_i, f_ref)
-        e_s_sim_m = 1.51**2
-        e_inf_sim_m = 1.71**2
-        tau_sim_m = 1e-13
+        # e_s_sim_m = 1.6**2
+        # e_inf_sim_m = 1.8**2
+        # tau_sim_m = 1e-13
+        e_s_sim_m = e_s_sim_m ** 2
+        e_inf_sim_m = e_inf_sim_m ** 2
         n_sim_m, k_sim_m = nk_from_eps(e_s_sim_m, e_inf_sim_m, tau_sim_m, f_ref)
-        e_s_sim_o = 1.5**2
-        e_inf_sim_o = 1.7**2
-        tau_sim_o = 1e-13
+        # e_s_sim_o = 1.5**2
+        # e_inf_sim_o = 1.7**2
+        # tau_sim_o = 1e-13
+        e_s_sim_o = e_s_sim_o ** 2
+        e_inf_sim_o = e_inf_sim_o ** 2
         n_sim_o, k_sim_o = nk_from_eps(e_s_sim_o, e_inf_sim_o, tau_sim_o, f_ref)
 
         f_15_idx = where(f_ref <= 1.5e12)[0][-1]  # f index at 1.5 THz
@@ -124,7 +137,6 @@ def sim_traces():
         print('contr_mo =', abs(n_sim_m[0] - n_sim_o[0]))
 
         # quit()
-
 
         # # internal layer
         # f_ref *= 1e-12
@@ -183,7 +195,7 @@ def sim_traces():
         # xlim([f_ref[f_min_idx], f_ref[f_max_idx]])
         # ylim([0.9 * n_sim[f_min_idx], 1.1 * n_sim[f_max_idx]])
         legend()
-        savefig('./output/n_sim.png')
+        savefig(working_dir + '/n_sim.png')
         close()
         
         figure()
@@ -194,7 +206,7 @@ def sim_traces():
         # xlim([f_ref[f_min_idx], f_ref[f_max_idx]])
         # ylim([k_sim[f_min_idx], k_sim[f_max_idx]])
         legend()
-        savefig('./output/k_sim.png')
+        savefig(working_dir + '/k_sim.png')
         # show()
         # quit()
         close()
@@ -246,15 +258,28 @@ def sim_traces():
         # show()
 
 
-print('Simulating refs to "measure" samples')
-print()
-sim_refs()
-print('Simulating traces - "measuring" samples')
-sim_traces()
-print()
-print('Simulating refs to "measure" references')
-sim_refs()
-print()
+sim_h = open('./output/sims.txt')
+for line in sim_h:
+    wk_dir, e_s_i, e_inf_i, tau_i, e_s_m, e_inf_m, tau_m, e_s_o, e_inf_o, tau_o = line.split(';')
+    e_s_i = float(e_s_i)
+    e_inf_i = float(e_inf_i)
+    tau_i = float(tau_i)
+    e_s_m = float(e_s_m)
+    e_inf_m = float(e_inf_m)
+    tau_m = float(tau_m)
+    e_s_o = float(e_s_o)
+    e_inf_o = float(e_inf_o)
+    tau_o = float(tau_o.replace('\n', ''))
+
+    print('Simulating refs to "measure"', wk_dir, 'samples')
+    print()
+    sim_refs(wk_dir)
+    print('Simulating traces - "measuring"', wk_dir, 'samples')
+    sim_traces(wk_dir, e_s_i, e_inf_i, tau_i, e_s_m, e_inf_m, tau_m, e_s_o, e_inf_o, tau_o)
+    print()
+    print('Simulating refs to "measure"', wk_dir, 'references')
+    sim_refs(wk_dir)
+    print()
 print('----------------------------')
 print('Done')
 print('----------------------------')

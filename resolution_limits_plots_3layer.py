@@ -75,10 +75,10 @@ pDr = list()
 
 # rows = list()
 
-sample_dir = 'test_0'
-error_dir = '5%'
+test_dir = 'test_1'
+error_dir = '2%'
 
-sample_dir = sample_dir + '/' + error_dir
+sample_dir = test_dir + '/' + error_dir
 
 with open('./output/simulation_results/' + sample_dir + '/resolution_limit.csv', 'r') as f:
     reader = csv.reader(f)
@@ -205,13 +205,13 @@ for i in range(d_mat_i.size):
     if pDr[i] == -10:
         ax.errorbar(d_mat_i[i], d_mat_mean_i[i], yerr=d_mat_std_i[i],
                     ls='', marker='.', capsize=2, lw=1, c='purple')
-        line10 = Line2D([0], [0], color='purple', ls='', marker='.')
+        line10 = Line2D([0], [0], color='purple', ls='', marker='2')
         lmda10.append(lmda[i])
         if abs(d_mat_i[i] - d_mat_mean_i[i]) / d_mat_i[i] > 0.1:
             d_mat_mean10.append(d_mat_mean_i[i])
     elif pDr[i] == -20:
         ax.errorbar(d_mat_i[i], d_mat_mean_i[i], yerr=d_mat_std_i[i],
-                    ls='', marker='+', capsize=2, lw=1, c='blue')
+                    ls='', marker='+', capsize=2, lw=1, c='pink')
         line20 = Line2D([0], [0], color='blue', ls='', marker='+')
         lmda20.append(lmda[i])
         if abs(d_mat_i[i] - d_mat_mean_i[i]) / d_mat_i[i] > 0.1:
@@ -239,8 +239,8 @@ for i in range(d_mat_i.size):
             d_mat_mean10.append(d_mat_mean_i[i])
     elif pDr[i] == -60:
             ax.errorbar(d_mat_i[i], d_mat_mean_i[i], yerr=d_mat_std_i[i],
-                        ls='', marker='1', capsize=2, lw=1, c='pink')
-            line60 = Line2D([0], [0], color='pink', ls='', marker='2')
+                        ls='', marker='1', capsize=2, lw=1, c='blue')
+            line60 = Line2D([0], [0], color='pink', ls='', marker='.')
             lmda60.append(lmda[i])
             if abs(d_mat_i[i] - d_mat_mean_i[i]) / d_mat_i[i] > 0.1:
                 d_mat_mean60.append(d_mat_mean_i[i])
@@ -276,13 +276,13 @@ for i in range(d_mat_i.size):
     if pDr[i] == -10:
         ax.errorbar(d_mat_i[i], d_mat_mean_i[i], yerr=d_mat_std_i[i],
                     ls='', marker='.', capsize=2, lw=1, c='purple')
-        line10 = Line2D([0], [0], color='purple', ls='', marker='.')
+        line10 = Line2D([0], [0], color='purple', ls='', marker='2')
         lmda10.append(lmda[i])
         if abs(d_mat_i[i] - d_mat_mean_i[i]) / d_mat_i[i] > 0.1:
             d_mat_mean10.append(d_mat_mean_i[i])
     elif pDr[i] == -20:
         ax.errorbar(d_mat_i[i], d_mat_mean_i[i], yerr=d_mat_std_i[i],
-                    ls='', marker='+', capsize=2, lw=1, c='blue')
+                    ls='', marker='+', capsize=2, lw=1, c='pink')
         line20 = Line2D([0], [0], color='blue', ls='', marker='+')
         lmda20.append(lmda[i])
         if abs(d_mat_i[i] - d_mat_mean_i[i]) / d_mat_i[i] > 0.1:
@@ -310,8 +310,8 @@ for i in range(d_mat_i.size):
             d_mat_mean10.append(d_mat_mean_i[i])
     elif pDr[i] == -60:
             ax.errorbar(d_mat_m[i], d_mat_mean_m[i], yerr=d_mat_std_m[i],
-                        ls='', marker='1', capsize=2, lw=1, c='pink')
-            line60 = Line2D([0], [0], color='pink', ls='', marker='2')
+                        ls='', marker='1', capsize=2, lw=1, c='blue')
+            line60 = Line2D([0], [0], color='pink', ls='', marker='.')
             lmda60.append(lmda[i])
             if abs(d_mat_m[i] - d_mat_mean_m[i]) / d_mat_m[i] > 0.1:
                 d_mat_mean60.append(d_mat_mean_m[i])
@@ -346,13 +346,13 @@ for i in range(d_mat_i.size):
     if pDr[i] == -10:
         ax.errorbar(d_mat_i[i], d_mat_mean_i[i], yerr=d_mat_std_i[i],
                     ls='', marker='.', capsize=2, lw=1, c='purple')
-        line10 = Line2D([0], [0], color='purple', ls='', marker='.')
+        line10 = Line2D([0], [0], color='purple', ls='', marker='2')
         lmda10.append(lmda[i])
         if abs(d_mat_i[i] - d_mat_mean_i[i]) / d_mat_i[i] > 0.1:
             d_mat_mean10.append(d_mat_mean_i[i])
     elif pDr[i] == -20:
         ax.errorbar(d_mat_i[i], d_mat_mean_i[i], yerr=d_mat_std_i[i],
-                    ls='', marker='+', capsize=2, lw=1, c='blue')
+                    ls='', marker='+', capsize=2, lw=1, c='pink')
         line20 = Line2D([0], [0], color='blue', ls='', marker='+')
         lmda20.append(lmda[i])
         if abs(d_mat_i[i] - d_mat_mean_i[i]) / d_mat_i[i] > 0.1:
@@ -373,8 +373,8 @@ for i in range(d_mat_i.size):
             d_mat_mean40.append(d_mat_mean_o[i])
     elif pDr[i] == -60:
             ax.errorbar(d_mat_o[i], d_mat_mean_o[i], yerr=d_mat_std_o[i],
-                        ls='', marker='1', capsize=2, lw=1, c='pink')
-            line60 = Line2D([0], [0], color='pink', ls='', marker='2')
+                        ls='', marker='1', capsize=2, lw=1, c='blue')
+            line60 = Line2D([0], [0], color='pink', ls='', marker='.')
             lmda60.append(lmda[i])
             if abs(d_mat_o[i] - d_mat_mean_o[i]) / d_mat_o[i] > 0.1:
                 d_mat_mean60.append(d_mat_mean_o[i])
@@ -399,7 +399,11 @@ custom_lines = [line_expected, line60]
 ax.legend(custom_lines, ['sim', -60])
 savefig('./output/simulation_results/' + sample_dir + '/d_mat_fit_o_' + error_analisis + '.png')
 
-t_ref, E_ref = read_1file('./output/refs/-60_ref.txt')
+
+quit()
+
+
+t_ref, E_ref = read_1file('./output/simulation_results/' + test_dir + '/refs/-60_ref.txt')
 t_ref *= 1e-12
 f_ref, E_ref_w = fourier_analysis(t_ref, E_ref)
 n_i, k_i = nk_from_eps(mean(e_s_i), mean(e_inf_i), mean(tau_i), f_ref)

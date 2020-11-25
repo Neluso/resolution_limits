@@ -56,8 +56,11 @@ def abs_spec(freq, s, sigma=1, mu=0):
     return exp
 
 
-def sim_refs():
-    out_dir = './output/refs/'
+def sim_refs(working_dir):
+    out_dir = './output/simulation_results/' + working_dir + '/refs/'
+    working_dir = './output/simulation_results/' + working_dir + '/'
+    if not os.path.isdir(working_dir):
+        os.mkdir(working_dir)
     if not os.path.isdir(out_dir):
         os.mkdir(out_dir)
         
@@ -128,7 +131,7 @@ def sim_refs():
             # legend()
             xlabel(r'$f\ (THz)$')
             ylabel('dB')
-            savefig('./output/ref_spectra_newest.png')
+            savefig(working_dir + '/ref_spectra_newest.png')
             close()
             figure()
             plot(times, 100 * trace_statitics / num_traces, lw=1)  # , label='old')
@@ -137,10 +140,10 @@ def sim_refs():
             # plot(times, 100 * trace_statitics4 / num_traces, lw=1, label='newest')
             # legend()
             xlabel(r'$t\ (ps)$')
-            savefig('./output/ref_traces.png')
+            savefig(working_dir + '/ref_traces.png')
             close()
         write_data(times, 100 * trace_statitics / num_traces, str(ns_floor) + '_ref', out_dir)  # THz
 
 
-sim_refs()
-show()
+# sim_refs()
+# show()

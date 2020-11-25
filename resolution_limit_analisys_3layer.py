@@ -99,13 +99,17 @@ def smooth(M, span):
 
 
 t0 = time_ns()
-out_dir = './output/'
+working_dir = 'test_1'
+fit_error = '2%'
+out_dir = './output/simulation_results/' + working_dir + '/' + fit_error + '/'
+if not os.path.isdir(out_dir):
+    os.mkdir(out_dir)
 # t_ref, E_ref = read_1file('./data/sim_resources/noise_ref.txt')  # t_ref in ps
 # f_ref, E_ref_w = fourier_analysis(t_ref, E_ref)  # f_ref in THz
 wh = open(out_dir + 'resolution_limit.csv', 'a')
 
-in_dir = './output/traces/'
-in_refs = './output/refs/'
+in_dir = './output/simulation_results/' + working_dir + '/traces/'
+in_refs = './output/simulation_results/' + working_dir + '/refs/'
 
 dir_list = os.listdir(in_dir)
 
@@ -143,86 +147,87 @@ if __name__ == '__main__':
         f_cutoff = (float(ns_level.split('.')[0]) - b) / m  # THz
         # plot(f_sim, toDb_0(E_sim_w))
         # plot(f_sim, m * f_sim + b)
-        
-        # k_bounds = [  # 1% uncertainty in optical paramaters
-        #     (-1e-12, 1e-12),  # d_air
-        #     (0.99 * e_s_sim_i, 1.01 * e_s_sim_i),  # e_s
-        #     (0.99 * e_inf_sim_i, 1.01 * e_inf_sim_i),  # e_inf
-        #     (0.99 * tau_sim_i, 1.01 * tau_sim_i),  # tau
-        #     (0.01e-6, 1000e-6),  # d_mat
-        #     (0.99 * e_s_sim_m, 1.01 * e_s_sim_m),  # e_s
-        #     (0.99 * e_inf_sim_m, 1.01 * e_inf_sim_m),  # e_inf
-        #     (0.99 * tau_sim_m, 1.01 * tau_sim_m),  # tau
-        #     (0.01e-6, 1000e-6),  # d_mat
-        #     (0.99 * e_s_sim_o, 1.01 * e_s_sim_o),  # e_s
-        #     (0.99 * e_inf_sim_o, 1.01 * e_inf_sim_o),  # e_inf
-        #     (0.99 * tau_sim_o, 1.01 * tau_sim_o),  # tau
-        #     (0.01e-6, 1000e-6)  # d_mat
-        # ]
-        
-        # k_bounds = [  # 2% uncertainty in optical paramaters
-        #     (-1e-12, 1e-12),  # d_air
-        #     (0.98 * e_s_sim_i, 1.02 * e_s_sim_i),  # e_s
-        #     (0.98 * e_inf_sim_i, 1.02 * e_inf_sim_i),  # e_inf
-        #     (0.98 * tau_sim_i, 1.02 * tau_sim_i),  # tau
-        #     (0.01e-6, 1000e-6),  # d_mat
-        #     (0.98 * e_s_sim_m, 1.02 * e_s_sim_m),  # e_s
-        #     (0.98 * e_inf_sim_m, 1.02 * e_inf_sim_m),  # e_inf
-        #     (0.98 * tau_sim_m, 1.02 * tau_sim_m),  # tau
-        #     (0.01e-6, 1000e-6),  # d_mat
-        #     (0.98 * e_s_sim_o, 1.02 * e_s_sim_o),  # e_s
-        #     (0.98 * e_inf_sim_o, 1.02 * e_inf_sim_o),  # e_inf
-        #     (0.98 * tau_sim_o, 1.02 * tau_sim_o),  # tau
-        #     (0.01e-6, 1000e-6)  # d_mat
-        # ]
-        
-        k_bounds = [  # 5% uncertainty in optical paramaters
-            (-1e-12, 1e-12),  # d_air
-            (0.95 * e_s_sim_i, 1.05 * e_s_sim_i),  # e_s
-            (0.95 * e_inf_sim_i, 1.05 * e_inf_sim_i),  # e_inf
-            (0.95 * tau_sim_i, 1.05 * tau_sim_i),  # tau
-            (0.01e-6, 1000e-6),  # d_mat
-            (0.95 * e_s_sim_m, 1.05 * e_s_sim_m),  # e_s
-            (0.95 * e_inf_sim_m, 1.05 * e_inf_sim_m),  # e_inf
-            (0.95 * tau_sim_m, 1.05 * tau_sim_m),  # tau
-            (0.01e-6, 1000e-6),  # d_mat
-            (0.95 * e_s_sim_o, 1.05 * e_s_sim_o),  # e_s
-            (0.95 * e_inf_sim_o, 1.05 * e_inf_sim_o),  # e_inf
-            (0.95 * tau_sim_o, 1.05 * tau_sim_o),  # tau
-            (0.01e-6, 1000e-6)  # d_mat
+
+        if fit_error == '1%':
+            k_bounds = [  # 1% uncertainty in optical paramaters
+                (-1e-12, 1e-12),  # d_air
+                (0.99 * e_s_sim_i, 1.01 * e_s_sim_i),  # e_s
+                (0.99 * e_inf_sim_i, 1.01 * e_inf_sim_i),  # e_inf
+                (0.99 * tau_sim_i, 1.01 * tau_sim_i),  # tau
+                (0.01e-6, 1000e-6),  # d_mat
+                (0.99 * e_s_sim_m, 1.01 * e_s_sim_m),  # e_s
+                (0.99 * e_inf_sim_m, 1.01 * e_inf_sim_m),  # e_inf
+                (0.99 * tau_sim_m, 1.01 * tau_sim_m),  # tau
+                (0.01e-6, 1000e-6),  # d_mat
+                (0.99 * e_s_sim_o, 1.01 * e_s_sim_o),  # e_s
+                (0.99 * e_inf_sim_o, 1.01 * e_inf_sim_o),  # e_inf
+                (0.99 * tau_sim_o, 1.01 * tau_sim_o),  # tau
+                (0.01e-6, 1000e-6)  # d_mat
         ]
-        
-        # k_bounds = [  # 10% uncertainty in optical paramaters
-        #     (-1e-12, 1e-12),  # d_air
-        #     (0.9 * e_s_sim_i, 1.1 * e_s_sim_i),  # e_s
-        #     (0.9 * e_inf_sim_i, 1.1 * e_inf_sim_i),  # e_inf
-        #     (0.9 * tau_sim_i, 1.1 * tau_sim_i),  # tau
-        #     (0.01e-6, 1000e-6),  # d_mat
-        #     (0.9 * e_s_sim_m, 1.1 * e_s_sim_m),  # e_s
-        #     (0.9 * e_inf_sim_m, 1.1 * e_inf_sim_m),  # e_inf
-        #     (0.9 * tau_sim_m, 1.1 * tau_sim_m),  # tau
-        #     (0.01e-6, 1000e-6),  # d_mat
-        #     (0.9 * e_s_sim_o, 1.1 * e_s_sim_o),  # e_s
-        #     (0.9 * e_inf_sim_o, 1.1 * e_inf_sim_o),  # e_inf
-        #     (0.9 * tau_sim_o, 1.1 * tau_sim_o),  # tau
-        #     (0.01e-6, 1000e-6)  # d_mat
-        # ]
-        
-        # k_bounds = [  # 20% uncertainty in optical paramaters
-        #     (-1e-12, 1e-12),  # d_air
-        #     (0.8 * e_s_sim_i, 1.2 * e_s_sim_i),  # e_s
-        #     (0.8 * e_inf_sim_i, 1.2 * e_inf_sim_i),  # e_inf
-        #     (0.8 * tau_sim_i, 1.2 * tau_sim_i),  # tau
-        #     (0.01e-6, 1000e-6),  # d_mat
-        #     (0.8 * e_s_sim_m, 1.2 * e_s_sim_m),  # e_s
-        #     (0.8 * e_inf_sim_m, 1.2 * e_inf_sim_m),  # e_inf
-        #     (0.8 * tau_sim_m, 1.2 * tau_sim_m),  # tau
-        #     (0.01e-6, 1000e-6),  # d_mat
-        #     (0.8 * e_s_sim_o, 1.2 * e_s_sim_o),  # e_s
-        #     (0.8 * e_inf_sim_o, 1.2 * e_inf_sim_o),  # e_inf
-        #     (0.8 * tau_sim_o, 1.2 * tau_sim_o),  # tau
-        #     (0.01e-6, 1000e-6)  # d_mat
-        # ]
+        elif fit_error == '2%':
+            k_bounds = [  # 2% uncertainty in optical paramaters
+                (-1e-12, 1e-12),  # d_air
+                (0.98 * e_s_sim_i, 1.02 * e_s_sim_i),  # e_s
+                (0.98 * e_inf_sim_i, 1.02 * e_inf_sim_i),  # e_inf
+                (0.98 * tau_sim_i, 1.02 * tau_sim_i),  # tau
+                (0.01e-6, 1000e-6),  # d_mat
+                (0.98 * e_s_sim_m, 1.02 * e_s_sim_m),  # e_s
+                (0.98 * e_inf_sim_m, 1.02 * e_inf_sim_m),  # e_inf
+                (0.98 * tau_sim_m, 1.02 * tau_sim_m),  # tau
+                (0.01e-6, 1000e-6),  # d_mat
+                (0.98 * e_s_sim_o, 1.02 * e_s_sim_o),  # e_s
+                (0.98 * e_inf_sim_o, 1.02 * e_inf_sim_o),  # e_inf
+                (0.98 * tau_sim_o, 1.02 * tau_sim_o),  # tau
+                (0.01e-6, 1000e-6)  # d_mat
+            ]
+        elif fit_error == '5%':
+            k_bounds = [  # 5% uncertainty in optical paramaters
+                (-1e-12, 1e-12),  # d_air
+                (0.95 * e_s_sim_i, 1.05 * e_s_sim_i),  # e_s
+                (0.95 * e_inf_sim_i, 1.05 * e_inf_sim_i),  # e_inf
+                (0.95 * tau_sim_i, 1.05 * tau_sim_i),  # tau
+                (0.01e-6, 1000e-6),  # d_mat
+                (0.95 * e_s_sim_m, 1.05 * e_s_sim_m),  # e_s
+                (0.95 * e_inf_sim_m, 1.05 * e_inf_sim_m),  # e_inf
+                (0.95 * tau_sim_m, 1.05 * tau_sim_m),  # tau
+                (0.01e-6, 1000e-6),  # d_mat
+                (0.95 * e_s_sim_o, 1.05 * e_s_sim_o),  # e_s
+                (0.95 * e_inf_sim_o, 1.05 * e_inf_sim_o),  # e_inf
+                (0.95 * tau_sim_o, 1.05 * tau_sim_o),  # tau
+                (0.01e-6, 1000e-6)  # d_mat
+            ]
+        elif fit_error == '10&':
+            k_bounds = [  # 10% uncertainty in optical paramaters
+                (-1e-12, 1e-12),  # d_air
+                (0.9 * e_s_sim_i, 1.1 * e_s_sim_i),  # e_s
+                (0.9 * e_inf_sim_i, 1.1 * e_inf_sim_i),  # e_inf
+                (0.9 * tau_sim_i, 1.1 * tau_sim_i),  # tau
+                (0.01e-6, 1000e-6),  # d_mat
+                (0.9 * e_s_sim_m, 1.1 * e_s_sim_m),  # e_s
+                (0.9 * e_inf_sim_m, 1.1 * e_inf_sim_m),  # e_inf
+                (0.9 * tau_sim_m, 1.1 * tau_sim_m),  # tau
+                (0.01e-6, 1000e-6),  # d_mat
+                (0.9 * e_s_sim_o, 1.1 * e_s_sim_o),  # e_s
+                (0.9 * e_inf_sim_o, 1.1 * e_inf_sim_o),  # e_inf
+                (0.9 * tau_sim_o, 1.1 * tau_sim_o),  # tau
+                (0.01e-6, 1000e-6)  # d_mat
+            ]
+        elif fit_error == '20%':
+            k_bounds = [  # 20% uncertainty in optical paramaters
+                (-1e-12, 1e-12),  # d_air
+                (0.8 * e_s_sim_i, 1.2 * e_s_sim_i),  # e_s
+                (0.8 * e_inf_sim_i, 1.2 * e_inf_sim_i),  # e_inf
+                (0.8 * tau_sim_i, 1.2 * tau_sim_i),  # tau
+                (0.01e-6, 1000e-6),  # d_mat
+                (0.8 * e_s_sim_m, 1.2 * e_s_sim_m),  # e_s
+                (0.8 * e_inf_sim_m, 1.2 * e_inf_sim_m),  # e_inf
+                (0.8 * tau_sim_m, 1.2 * tau_sim_m),  # tau
+                (0.01e-6, 1000e-6),  # d_mat
+                (0.8 * e_s_sim_o, 1.2 * e_s_sim_o),  # e_s
+                (0.8 * e_inf_sim_o, 1.2 * e_inf_sim_o),  # e_inf
+                (0.8 * tau_sim_o, 1.2 * tau_sim_o),  # tau
+                (0.01e-6, 1000e-6)  # d_mat
+            ]
         
         # constr_mat = zeros((len(k_bounds),len(k_bounds)))
         # for i in range(len(k_bounds)):
@@ -311,6 +316,9 @@ if __name__ == '__main__':
                     if l_idx not in (4, 8, 12):
                         if k_bounds.lb[l_idx] > res.x[l_idx] or res.x[l_idx] > k_bounds.ub[l_idx]:
                             check[l_idx] = False
+                            print('ha petat')
+                            quit()
+
 
                 if check == [True]*13:
                     break
