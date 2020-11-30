@@ -30,7 +30,7 @@ def phase_factor(n, k, thick, freq):  # theta in radians
     thick *= cos(theta(n))
     phi_n = 2 * omg * thick / c_0
     phi_k = 2 * omg * thick / c_0
-    return exp(- 1j * phi_n) * exp(- k * phi_k)
+    return exp(- 1j * n * phi_n) * exp(- k * phi_k)
 
 
 def epsilon(e_s, e_inf, tau, freq):  # Debye model
@@ -100,7 +100,7 @@ def smooth(M, span):
 
 t0 = time_ns()
 working_dir = 'test_1'
-fit_error = '1%'
+fit_error = '5%'
 out_dir = './output/simulation_results/' + working_dir + '/' + fit_error + '/'
 if not os.path.isdir(out_dir):
     os.mkdir(out_dir)
