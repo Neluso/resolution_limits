@@ -114,7 +114,7 @@ in_dir = './output/simulation_results/' + working_dir + '/traces/'
 in_refs = './output/simulation_results/' + working_dir + '/refs/'
 
 dir_list = os.listdir(in_dir)
-num_statistics = 100
+num_statistics = 300
 
 
 if __name__ == '__main__':
@@ -180,15 +180,15 @@ if __name__ == '__main__':
             e_inf_fit_o = random.normal(e_inf_sim_o, 0.02 * e_s_sim_o, num_statistics)
             tau_fit_o = random.normal(tau_sim_o, 0.02 * e_s_sim_o, num_statistics)
         else:
-            e_s_fit_i = random.normal(e_s_sim_i, 0.001 * e_s_sim_i, num_statistics)
-            e_inf_fit_i = random.normal(e_inf_sim_i, 0.001 * e_s_sim_i, num_statistics)
-            tau_fit_i = random.normal(tau_sim_i, 0.001 * e_s_sim_i, num_statistics)
-            e_s_fit_m = random.normal(e_s_sim_m, 0.001 * e_s_sim_m, num_statistics)
-            e_inf_fit_m = random.normal(e_inf_sim_m, 0.001 * e_s_sim_m, num_statistics)
-            tau_fit_m = random.normal(tau_sim_m, 0.001 * e_s_sim_m, num_statistics)
-            e_s_fit_o = random.normal(e_s_sim_o, 0.001 * e_s_sim_o, num_statistics)
-            e_inf_fit_o = random.normal(e_inf_sim_o, 0.001 * e_s_sim_o, num_statistics)
-            tau_fit_o = random.normal(tau_sim_o, 0.001 * e_s_sim_o, num_statistics)
+            e_s_fit_i = e_s_sim_i * ones(num_statistics)
+            e_inf_fit_i = e_inf_fit_i * ones(num_statistics)
+            tau_fit_i = tau_fit_i * ones(num_statistics)
+            e_s_fit_m = e_s_sim_m * ones(num_statistics)
+            e_inf_fit_m = e_inf_fit_m * ones(num_statistics)
+            tau_fit_m = tau_fit_m * ones(num_statistics)
+            e_s_fit_o = e_s_sim_o * ones(num_statistics)
+            e_inf_fit_o = e_inf_fit_o * ones(num_statistics)
+            tau_fit_o = tau_fit_o * ones(num_statistics)
         
         k_bounds = Bounds(array(k_bounds)[:, 0], array(k_bounds)[:, 1])
 
