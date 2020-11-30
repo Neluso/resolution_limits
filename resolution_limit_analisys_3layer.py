@@ -99,7 +99,7 @@ def smooth(M, span):
 
 t0 = time_ns()
 working_dir = 'test_1'
-fit_error = '5%'
+fit_error = '10%'
 out_dir = './output/simulation_results/' + working_dir + '/' + fit_error + '/'
 if not os.path.isdir(out_dir):
     os.mkdir(out_dir)
@@ -195,7 +195,7 @@ if __name__ == '__main__':
                 (0.95 * tau_sim_o, 1.05 * tau_sim_o),  # tau
                 (0.01e-6, 1000e-6)  # d_mat
             ]
-        elif fit_error == '10&':
+        elif fit_error == '10%':
             k_bounds = [  # 10% uncertainty in optical paramaters
                 (-1e-12, 1e-12),  # d_air
                 (0.9 * e_s_sim_i, 1.1 * e_s_sim_i),  # e_s
