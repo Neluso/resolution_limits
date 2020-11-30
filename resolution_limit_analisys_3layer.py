@@ -100,7 +100,7 @@ def smooth(M, span):
 
 t0 = time_ns()
 working_dir = 'test_1'
-fit_error = '2%'
+fit_error = '1%'
 out_dir = './output/simulation_results/' + working_dir + '/' + fit_error + '/'
 if not os.path.isdir(out_dir):
     os.mkdir(out_dir)
@@ -256,7 +256,7 @@ if __name__ == '__main__':
         
         f_ref *= 1e12  # Hz
         f_sim *= 1e12  # Hz
-        num_statistics = 5
+        num_statistics = 10
         for i in range(num_statistics):
             while True:
                 print('Fitting', i + 1, 'of', num_statistics, 'for', d_mat,

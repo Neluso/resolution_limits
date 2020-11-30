@@ -228,7 +228,7 @@ def sim_traces(working_dir, e_s_sim_i, e_inf_sim_i, tau_sim_i,
         # for d_mat in [0.01, 10**-1.5, 0.1, 10**-0.5, 1, 10**0.5, 10, 10**1.5, 100, 10**2.5]:
         
         f_ref *= 1e12  # Hz
-        for d_mat in pow(10, arange(-1, 2, 1/2)):  # 1/3
+        for d_mat in pow(10, arange(-1, 3, 1/3)):  # 1/3
             
             print()
             print('Simulating for', d_mat, 'um')
