@@ -20,7 +20,7 @@ def nk_from_eps(e_s, e_inf, tau, freq):
 test_dirs = list()
 for i in range(15):
     test_dirs.append('test_' + str(i+1))
-error_dirs = ['1%', '2%', '5%', '10%', '20%']
+error_dirs = ['1%', '2%', '5%', '10%']  # , '20%']
 
 for test_dir in test_dirs:
     for error_dir in error_dirs:
@@ -179,12 +179,34 @@ for test_dir in test_dirs:
         pDr = array(pDr)
         lmda = (c_0 / (f_cutoff * 1e12)) * 1e6  # um
 
-        figure(1)
+        figure(test_dir)
         ax = axes()
         ax.set_xscale('log')
         ax.set_yscale('log')
-        ax.plot(d_mat_i, d_mat_std_i / d_mat_mean_i, '.b')
+        # if error_dir == '1%':
+        #     ax.plot(d_mat_i, d_mat_std_i / d_mat_mean_i, '.b')
+        # elif error_dir == '2%':
+        #     ax.plot(d_mat_i, d_mat_std_i / d_mat_mean_i, '.k')
+        # elif error_dir == '5%':
+        #     ax.plot(d_mat_i, d_mat_std_i / d_mat_mean_i, '.g')
+        # elif error_dir == '10%':
+        #     ax.plot(d_mat_i, d_mat_std_i / d_mat_mean_i, '.y')
+        # elif error_dir == '20%':
+        #     ax.plot(d_mat_i, d_mat_std_i / d_mat_mean_i, '.r')
+        if error_dir == '1%':
+            ax.plot(d_mat_i, d_mat_mean_i, '.b')
+        elif error_dir == '2%':
+            ax.plot(d_mat_i, d_mat_mean_i, '.k')
+        elif error_dir == '5%':
+            ax.plot(d_mat_i, d_mat_mean_i, '.g')
+        elif error_dir == '10%':
+            ax.plot(d_mat_i, d_mat_mean_i, '.y')
+        elif error_dir == '20%':
+            ax.plot(d_mat_i, d_mat_mean_i, '.r')
         # plot(d_mat_m, d_mat_std_m / d_mat_mean_m, '.r')
         # plot(d_mat_o, d_mat_std_o / d_mat_mean_o, '.g')
+    
+    ax.plot(d_mat_i, d_mat_i, '-', c='black', label='expected')
+    savefig('./output/simulation_results/' + test_dir + '/' + test_dir + '.png')
 
 show()
