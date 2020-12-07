@@ -98,8 +98,8 @@ def smooth(M, span):
 
 
 t0 = time_ns()
-working_dir = 'test_1'
-fit_error = '5%'
+working_dir = 'test_13'
+fit_error = '5 %'
 out_dir = './output/simulation_results/' + working_dir + '/' + fit_error + '/'
 if not os.path.isdir(out_dir):
     os.mkdir(out_dir)
