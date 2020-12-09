@@ -1,6 +1,13 @@
 from TDSA import *
 import os
-from scipy.optimize import differential_evolution, curve_fit, LinearConstraint, Bounds
+from scipy.optimize import curve_fit, LinearConstraint, Bounds
+from pycude import differential_evolution
+import pycuda.driver as drv
+from pycuda.compiler import SourceModule
+import pycuda.gpuarray as gpuarray
+import pycuda.cumath
+from pycuda.elementwise import ElementwiseKernel
+
 
 deg_in = 0  # incidence angle in degrees
 snell_sin = n_air * sin(deg_in * pi / 180)
@@ -97,6 +104,10 @@ def smooth(M, span):
     return M_aux
 
 
+# start = drv.Event()
+# end = drv.Event()
+
+
 t0 = time_ns()
 working_dir = 'test_13'
 fit_error = '5%'
@@ -105,7 +116,8 @@ if not os.path.isdir(out_dir):
     os.mkdir(out_dir)
 # t_ref, E_ref = read_1file('./data/sim_resources/noise_ref.txt')  # t_ref in ps
 # f_ref, E_ref_w = fourier_analysis(t_ref, E_ref)  # f_ref in THz
-wh = open(out_dir + 'resolution_limit.csv', 'a')
+# wh = open(out_dir + 'resolution_limit.csv', 'a')
+wh = open('./output/test.csv', 'a')
 
 in_dir = './output/simulation_results/' + working_dir + '/traces/'
 in_refs = './output/simulation_results/' + working_dir + '/refs/'
@@ -236,7 +248,7 @@ if __name__ == '__main__':
         # # quit()
         # k_bounds_constraint = LinearConstraint(constr_mat, array(k_bounds)[:, 0], array(k_bounds)[:, 1])
         
-        k_bounds = Bounds(array(k_bounds)[:, 0], array(k_bounds)[:, 1])
+        # k_bounds = Bounds(array(k_bounds)[:, 0], array(k_bounds)[:, 1])
 
         
         d_air_fit = list()
@@ -266,11 +278,11 @@ if __name__ == '__main__':
                                              args=(E_sim, E_ref_w, f_ref),
                                              # popsize=30,
                                              # maxiter=3000,
-                                             updating='deferred',
-                                             workers=-1,
-                                             disp=False,  # step cost_function value
+                                             # updating='deferred',
+                                             # workers=-1,
+                                             disp=True  # step cost_function value
                                              # constraints=k_bounds,  # _constraint,
-                                             polish=True
+                                             # polish=True
                                              )
                 t2 = time_ns()
                 # print(res.x[4] * 1e6)
