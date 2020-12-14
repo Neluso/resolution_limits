@@ -184,6 +184,7 @@ for test_dir in test_dirs:
         ax = axes()
         ax.set_xscale('log')
         ax.set_yscale('log')
+
         # if test_dir in ['test_1', 'test_2', 'test_3']:
         #     if test_dir == 'test_1':
         #         ax.plot(d_mat_i, abs(d_mat_mean_i - d_mat_i) / d_mat_i, 'b.')
@@ -309,6 +310,11 @@ for test_dir in test_dirs:
         legend2 = legend(handles=legend_contr, loc=3)
         ax.add_artist(legend1)
         ax.add_artist(legend2)
-        xlabel(r'$d_{sim}')
-        ylabel(r'$\frac{|d_{fit} - d_{sim}|}{d_{sim}}$')
-show()
+        xlabel(r'$d_{sim}$')
+        ylabel('Dispersion')
+        ax.plot(d_mat_t, ones(d_mat_t.size) / 100, 'k-', lw=0.5)
+        ylim([1e-5, 2e4])
+
+        if test_dir == 'test_15':
+            savefig('./output/simulation_results/' + error_dir + '.png')
+# show()
