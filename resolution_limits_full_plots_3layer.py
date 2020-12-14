@@ -20,7 +20,7 @@ def nk_from_eps(e_s, e_inf, tau, freq):
 test_dirs = list()
 for i in range(15):
     test_dirs.append('test_' + str(i+1))
-error_dirs = ['1%', '2%', '5%', '10%']  # , '20%']
+error_dirs = ['1%', '2%', '5%', '10%', '20%']
 
 for test_dir in test_dirs:
     for error_dir in error_dirs:
@@ -179,7 +179,7 @@ for test_dir in test_dirs:
         pDr = array(pDr)
         lmda = (c_0 / (f_cutoff * 1e12)) * 1e6  # um
 
-        figure(test_dir)
+        figure(test_dir + '1')
         ax = axes()
         ax.set_xscale('log')
         ax.set_yscale('log')
@@ -194,19 +194,67 @@ for test_dir in test_dirs:
         # elif error_dir == '20%':
         #     ax.plot(d_mat_i, d_mat_std_i / d_mat_mean_i, '.r')
         if error_dir == '1%':
-            ax.plot(d_mat_i, d_mat_mean_i, '.b')
+            ax.errorbar(d_mat_i, d_mat_mean_i, yerr=d_mat_std_i, fmt='.b')
         elif error_dir == '2%':
-            ax.plot(d_mat_i, d_mat_mean_i, '.k')
+            ax.errorbar(d_mat_i, d_mat_mean_i, yerr=d_mat_std_i, fmt='.c')
         elif error_dir == '5%':
-            ax.plot(d_mat_i, d_mat_mean_i, '.g')
+            ax.errorbar(d_mat_i, d_mat_mean_i, yerr=d_mat_std_i, fmt='.g')
         elif error_dir == '10%':
-            ax.plot(d_mat_i, d_mat_mean_i, '.y')
+            ax.errorbar(d_mat_i, d_mat_mean_i, yerr=d_mat_std_i, fmt='.r')
         elif error_dir == '20%':
-            ax.plot(d_mat_i, d_mat_mean_i, '.r')
+            ax.errorbar(d_mat_i, d_mat_mean_i, yerr=d_mat_std_i, fmt='.y')
+
+        figure(test_dir + '2')
+        ax = axes()
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+        if error_dir == '1%':
+            ax.errorbar(d_mat_m, d_mat_mean_m, yerr=d_mat_std_m, fmt='.b')
+        elif error_dir == '2%':
+            ax.errorbar(d_mat_m, d_mat_mean_m, yerr=d_mat_std_m, fmt='.c')
+        elif error_dir == '5%':
+            ax.errorbar(d_mat_m, d_mat_mean_m, yerr=d_mat_std_m, fmt='.g')
+        elif error_dir == '10%':
+            ax.errorbar(d_mat_m, d_mat_mean_m, yerr=d_mat_std_m, fmt='.r')
+        elif error_dir == '20%':
+            ax.errorbar(d_mat_m, d_mat_mean_m, yerr=d_mat_std_m, fmt='.y')
+
+        figure(test_dir + '3')
+        ax = axes()
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+        if error_dir == '1%':
+            ax.errorbar(d_mat_o, d_mat_mean_o, yerr=d_mat_std_o, fmt='.b')
+        elif error_dir == '2%':
+            ax.errorbar(d_mat_o, d_mat_mean_o, yerr=d_mat_std_o, fmt='.c')
+        elif error_dir == '5%':
+            ax.errorbar(d_mat_o, d_mat_mean_o, yerr=d_mat_std_o, fmt='.g')
+        elif error_dir == '10%':
+            ax.errorbar(d_mat_o, d_mat_mean_o, yerr=d_mat_std_o, fmt='.r')
+        elif error_dir == '20%':
+            ax.errorbar(d_mat_o, d_mat_mean_o, yerr=d_mat_std_o, fmt='.y')
         # plot(d_mat_m, d_mat_std_m / d_mat_mean_m, '.r')
         # plot(d_mat_o, d_mat_std_o / d_mat_mean_o, '.g')
-    
-    ax.plot(d_mat_i, d_mat_i, '-', c='black', label='expected')
-    savefig('./output/simulation_results/' + test_dir + '/' + test_dir + '.png')
 
-show()
+    legend_elements = [
+        Line2D([0], [0], color='b', marker ='.'),
+        Line2D([0], [0], color='c', marker='.'),
+        Line2D([0], [0], color='g', marker='.'),
+        Line2D([0], [0], color='r', marker='.'),
+        Line2D([0], [0], color='y', marker='.')
+    ]
+
+    figure(test_dir + '1')
+    plot(d_mat_i, d_mat_i, '-', c='black', label='expected')
+    # legend(handles=legend_elements)
+    savefig('./output/simulation_results/' + test_dir + '/' + test_dir + '_i.png')
+    figure(test_dir + '2')
+    plot(d_mat_m, d_mat_m, '-', c='black', label='expected')
+    # legend(handles=legend_elements)
+    savefig('./output/simulation_results/' + test_dir + '/' + test_dir + '_m.png')
+    figure(test_dir + '3')
+    plot(d_mat_o, d_mat_o, '-', c='black', label='expected')
+    # legend(handles=legend_elements)
+    savefig('./output/simulation_results/' + test_dir + '/' + test_dir + '_o.png')
+
+# show()
