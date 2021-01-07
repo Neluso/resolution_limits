@@ -163,6 +163,22 @@ if __name__ == '__main__':
                 (0.99 * tau_sim_o, 1.01 * tau_sim_o),  # tau
                 (0.01e-6, 1000e-6)  # d_mat
         ]
+        elif fit_error == '1.5%':
+            k_bounds = [  # 1.5% uncertainty in optical paramaters
+                (-1e-12, 1e-12),  # d_air
+                (0.985 * e_s_sim_i, 1.015 * e_s_sim_i),  # e_s
+                (0.985 * e_inf_sim_i, 1.015 * e_inf_sim_i),  # e_inf
+                (0.985 * tau_sim_i, 1.015 * tau_sim_i),  # tau
+                (0.01e-6, 1000e-6),  # d_mat
+                (0.985 * e_s_sim_m, 1.015 * e_s_sim_m),  # e_s
+                (0.985 * e_inf_sim_m, 1.015 * e_inf_sim_m),  # e_inf
+                (0.985 * tau_sim_m, 1.015 * tau_sim_m),  # tau
+                (0.01e-6, 1000e-6),  # d_mat
+                (0.985 * e_s_sim_o, 1.015 * e_s_sim_o),  # e_s
+                (0.985 * e_inf_sim_o, 1.015 * e_inf_sim_o),  # e_inf
+                (0.985 * tau_sim_o, 1.015 * tau_sim_o),  # tau
+                (0.01e-6, 1000e-6)  # d_mat
+            ]
         elif fit_error == '2%':
             k_bounds = [  # 2% uncertainty in optical paramaters
                 (-1e-12, 1e-12),  # d_air
@@ -238,7 +254,6 @@ if __name__ == '__main__':
         
         k_bounds = Bounds(array(k_bounds)[:, 0], array(k_bounds)[:, 1])
 
-        
         d_air_fit = list()
         e_s_fit_i = list()
         e_inf_fit_i = list()
@@ -257,72 +272,58 @@ if __name__ == '__main__':
         f_sim *= 1e12  # Hz
         num_statistics = 10
         for i in range(num_statistics):
-            while True:
-                print('Fitting', i + 1, 'of', num_statistics, 'for', d_mat,
-                      '(10^' + str(log10(d_mat)) + ')', 'um at', ns_level.split('.')[0], 'dB')
-                t1 = time_ns()
-                res = differential_evolution(cost_function,
-                                             k_bounds,
-                                             args=(E_sim, E_ref_w, f_ref),
-                                             # popsize=30,
-                                             # maxiter=3000,
-                                             updating='deferred',
-                                             workers=-1,
-                                             disp=False,  # step cost_function value
-                                             # constraints=k_bounds,  # _constraint,
-                                             polish=True
-                                             )
-                t2 = time_ns()
-                # print(res.x[4] * 1e6)
-                n_sim_i, k_sim_i = nk_from_eps(res.x[1], res.x[2], res.x[3], f_sim)
-                n_sim_m, k_sim_m = nk_from_eps(res.x[5], res.x[6], res.x[7], f_sim)
-                n_sim_o, k_sim_o = nk_from_eps(res.x[9], res.x[10], res.x[11], f_sim)
-                H_fit = H_sim(f_sim, n_sim_i, k_sim_i, res.x[4], n_sim_i, k_sim_i, res.x[8], n_sim_o, k_sim_o, res.x[12],
-                              res.x[0])
-                # plot(t_sim, E_sim)
-                # plot(t_sim, irfft(H_fit * E_ref_w))
-                # show()
-                # quit()
-                secs1 = (t2 - t1) * 1e-9
-                # if secs1 < 3600:
-                #     print('Fitting time (mm:ss):', strftime('%M:%S', gmtime(secs1)))
-                # else:
-                #     print('Fitting time (hh:mm:ss):', strftime('%H:%M:%S', gmtime(secs1)))
-                t3 = time_ns()
-                secs0 = (t3 - t0) * 1e-9
-                # if secs0 < 3600:
-                #     print('Time since start (mm:ss):', strftime('%M:%S', gmtime(secs0)))
-                # else:
-                #     print('Time since start (hh:mm:ss):', strftime('%H:%M:%S', gmtime(secs0)))
+            print('Fitting', i + 1, 'of', num_statistics, 'for', d_mat,
+                  '(10^' + str(log10(d_mat)) + ')', 'um at', ns_level.split('.')[0], 'dB')
+            t1 = time_ns()
+            res = differential_evolution(cost_function,
+                                         k_bounds,
+                                         args=(E_sim, E_ref_w, f_ref),
+                                         # popsize=30,
+                                         # maxiter=3000,
+                                         updating='deferred',
+                                         workers=-1,
+                                         disp=False,  # step cost_function value
+                                         # constraints=k_bounds,  # _constraint,
+                                         polish=True
+                                         )
+            t2 = time_ns()
+            # print(res.x[4] * 1e6)
+            n_sim_i, k_sim_i = nk_from_eps(res.x[1], res.x[2], res.x[3], f_sim)
+            n_sim_m, k_sim_m = nk_from_eps(res.x[5], res.x[6], res.x[7], f_sim)
+            n_sim_o, k_sim_o = nk_from_eps(res.x[9], res.x[10], res.x[11], f_sim)
+            H_fit = H_sim(f_sim, n_sim_i, k_sim_i, res.x[4], n_sim_i, k_sim_i, res.x[8], n_sim_o, k_sim_o, res.x[12],
+                          res.x[0])
+            # plot(t_sim, E_sim)
+            # plot(t_sim, irfft(H_fit * E_ref_w))
+            # show()
+            # quit()
+            secs1 = (t2 - t1) * 1e-9
+            # if secs1 < 3600:
+            #     print('Fitting time (mm:ss):', strftime('%M:%S', gmtime(secs1)))
+            # else:
+            #     print('Fitting time (hh:mm:ss):', strftime('%H:%M:%S', gmtime(secs1)))
+            t3 = time_ns()
+            secs0 = (t3 - t0) * 1e-9
+            # if secs0 < 3600:
+            #     print('Time since start (mm:ss):', strftime('%M:%S', gmtime(secs0)))
+            # else:
+            #     print('Time since start (hh:mm:ss):', strftime('%H:%M:%S', gmtime(secs0)))
 
-                d_air_fit.append(res.x[0] * 1e6)
+            d_air_fit.append(res.x[0] * 1e6)
 
-                e_s_fit_i.append(res.x[1])
-                e_inf_fit_i.append(res.x[2])
-                tau_fit_i.append(res.x[3])
-                d_mat_fit_i.append(res.x[4] * 1e6)
-                e_s_fit_m.append(res.x[5])
-                e_inf_fit_m.append(res.x[6])
-                tau_fit_m.append(res.x[7])
-                d_mat_fit_m.append(res.x[8] * 1e6)
-                e_s_fit_o.append(res.x[9])
-                e_inf_fit_o.append(res.x[10])
-                tau_fit_o.append(res.x[11])
-                d_mat_fit_o.append(res.x[12] * 1e6)
+            e_s_fit_i.append(res.x[1])
+            e_inf_fit_i.append(res.x[2])
+            tau_fit_i.append(res.x[3])
+            d_mat_fit_i.append(res.x[4] * 1e6)
+            e_s_fit_m.append(res.x[5])
+            e_inf_fit_m.append(res.x[6])
+            tau_fit_m.append(res.x[7])
+            d_mat_fit_m.append(res.x[8] * 1e6)
+            e_s_fit_o.append(res.x[9])
+            e_inf_fit_o.append(res.x[10])
+            tau_fit_o.append(res.x[11])
+            d_mat_fit_o.append(res.x[12] * 1e6)
 
-                check = [True] * 13
-                for l_idx in range(len(k_bounds.lb)):
-                    if l_idx not in (4, 8, 12):
-                        if k_bounds.lb[l_idx] > res.x[l_idx] or res.x[l_idx] > k_bounds.ub[l_idx]:
-                            check[l_idx] = False
-                            print('ha petat')
-                            quit()
-
-
-                if check == [True]*13:
-                    break
-                print(check)
-        
         d_air_fit = array(d_air_fit)
         d_mat_fit_i = array(d_mat_fit_i)
         e_s_fit_i = array(e_s_fit_i)

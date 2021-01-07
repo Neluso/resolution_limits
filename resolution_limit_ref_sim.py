@@ -130,7 +130,9 @@ def sim_refs(working_dir):
             # legend()
             xlabel(r'$f\ (THz)$')
             ylabel('dB')
-            savefig(working_dir + '/ref_spectra_newest.png')
+            savefig(working_dir + '/ref_spectra.pdf')
+            xlim([0, 4])
+            savefig(working_dir + '/ref_spectra_cut.pdf')
             close()
             figure()
             plot(times, 100 * trace_statitics / num_traces, lw=1)  # , label='old')
@@ -139,10 +141,10 @@ def sim_refs(working_dir):
             # plot(times, 100 * trace_statitics4 / num_traces, lw=1, label='newest')
             # legend()
             xlabel(r'$t\ (ps)$')
-            savefig(working_dir + '/ref_traces.png')
+            savefig(working_dir + '/ref_traces.pdf')
             close()
         write_data(times, 100 * trace_statitics / num_traces, str(ns_floor) + '_ref', out_dir)  # THz
 
 
-# sim_refs()
+# sim_refs('./output/')
 # show()
