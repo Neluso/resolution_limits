@@ -20,7 +20,7 @@ def nk_from_eps(e_s, e_inf, tau, freq):
 test_dirs = list()
 for i in range(15):
     test_dirs.append('test_' + str(i+1))
-error_dirs = ['1%', '2%', '5%', '10%']  # , '20%']
+error_dirs = ['1%', '1.5%', '2%', '5%', '10%']  # , '20%']
 
 for test_dir in test_dirs:
     for error_dir in error_dirs:
@@ -195,35 +195,62 @@ for test_dir in test_dirs:
         #         ax.plot(d_mat_i, abs(d_mat_mean_i - d_mat_i) / d_mat_i, 'yx')
         #         ax.plot(d_mat_m, abs(d_mat_mean_m - d_mat_m) / d_mat_m, 'yx')
         #         ax.plot(d_mat_o, abs(d_mat_mean_o - d_mat_o) / d_mat_o, 'yx')
+        # if test_dir in ['test_1', 'test_2', 'test_3']:
+        #     if test_dir == 'test_1':
+        #         ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'b.')
+        #     elif test_dir == 'test_2':
+        #         ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'b+')
+        #     elif test_dir == 'test_3':
+        #         ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'bx')
+        # elif test_dir in ['test_4', 'test_5', 'test_6']:
+        #     if test_dir == 'test_4':
+        #         ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'g.')
+        #     elif test_dir == 'test_5':
+        #         ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'g+')
+        #     elif test_dir == 'test_6':
+        #         ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'gx')
+        # elif test_dir in ['test_13', 'test_14', 'test_15']:
+        #     if test_dir == 'test_13':
+        #         ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'r.')
+        #     elif test_dir == 'test_14':
+        #         ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'r+')
+        #     elif test_dir == 'test_15':
+        #         ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'rx')
+        # else:
+        #     if test_dir in ['test_7', 'test_10']:
+        #         ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'y.')
+        #     elif test_dir in ['test_8', 'test_11']:
+        #         ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'y+')
+        #     elif test_dir in ['test_9', 'test_12']:
+        #         ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'yx')
         if test_dir in ['test_1', 'test_2', 'test_3']:
             if test_dir == 'test_1':
-                ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'b.')
+                ax.plot(d_mat_t, d_mat_mean_t, 'b.')
             elif test_dir == 'test_2':
-                ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'b+')
+                ax.plot(d_mat_t, d_mat_mean_t, 'b+')
             elif test_dir == 'test_3':
-                ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'bx')
+                ax.plot(d_mat_t, d_mat_mean_t, 'bx')
         elif test_dir in ['test_4', 'test_5', 'test_6']:
             if test_dir == 'test_4':
-                ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'g.')
+                ax.plot(d_mat_t, d_mat_mean_t, 'g.')
             elif test_dir == 'test_5':
-                ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'g+')
+                ax.plot(d_mat_t, d_mat_mean_t, 'g+')
             elif test_dir == 'test_6':
-                ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'gx')
+                ax.plot(d_mat_t, d_mat_mean_t, 'gx')
         elif test_dir in ['test_13', 'test_14', 'test_15']:
             if test_dir == 'test_13':
-                ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'r.')
+                ax.plot(d_mat_t, d_mat_mean_t, 'r.')
             elif test_dir == 'test_14':
-                ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'r+')
+                ax.plot(d_mat_t, d_mat_mean_t, 'r+')
             elif test_dir == 'test_15':
-                ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'rx')
+                ax.plot(d_mat_t, d_mat_mean_t, 'rx')
         else:
             if test_dir in ['test_7', 'test_10']:
-                ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'y.')
+                ax.plot(d_mat_t, d_mat_mean_t, 'y.')
             elif test_dir in ['test_8', 'test_11']:
-                ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'y+')
+                ax.plot(d_mat_t, d_mat_mean_t, 'y+')
             elif test_dir in ['test_9', 'test_12']:
-                ax.plot(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, 'yx')
-
+                ax.plot(d_mat_t, d_mat_mean_t, 'yx')
         # if test_dir in ['test_1', 'test_2', 'test_3']:
         #     if test_dir == 'test_1':
         #         ax.errorbar(d_mat_t, abs(d_mat_mean_t - d_mat_t) / d_mat_t, yerr=d_mat_std_t / d_mat_t, fmt='b.')
@@ -270,10 +297,11 @@ for test_dir in test_dirs:
         ax.add_artist(legend2)
         xlabel(r'$d_{sim}$')
         ylabel('Dispersion')
-        ax.plot(d_mat_t, ones(d_mat_t.size) / 100, 'k-', lw=0.5)
+        # ax.plot(d_mat_t, ones(d_mat_t.size) / 100, 'k-', lw=0.5)
+        ax.plot(d_mat_t, d_mat_t, 'k-', lw=0.5)
         ylim([1e-5, 2e4])
 
         if test_dir == 'test_15':
-            savefig('./output/simulation_results/' + error_dir + '.pdf')
+            savefig('./output/simulation_results/' + error_dir.replace('%','_100_2') + '.pdf')
             clf()
 # show()
