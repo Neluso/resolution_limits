@@ -70,7 +70,6 @@ def cost_function(params, *args):
     return sum((E_sam - E_teo) ** 2)
 
 
-
 in_dir = './output/simulation_real_refs/2_layer/traces/'
 ref_dir = './sim_resources/refs/'
 data_base_dir = './sim_resources/polymer_database/'
