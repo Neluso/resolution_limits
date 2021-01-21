@@ -93,19 +93,31 @@ if __name__ == '__main__':
             (0, 1e-3)  # d_mat
         ]
         print(trace)
-        res = differential_evolution(cost_function,
-                                     k_bounds,
-                                     args=(E_sam, E_ref_w, f_ref, n_i, k_i, n_o, k_o),
-                                     popsize=30,
-                                     # maxiter=3000,
-                                     updating='deferred',
-                                     workers=-1,
-                                     disp=False,  # step cost_function value
-                                     polish=True
-                                     )
+        num_statistics = 20
+        resx0 = list()
+        resx1 = list()
+        resx2 = list()
+        for i in range(num_statistics):
+            res = differential_evolution(cost_function,
+                                         k_bounds,
+                                         args=(E_sam, E_ref_w, f_ref, n_i, k_i, n_o, k_o),
+                                         popsize=30,
+                                         # maxiter=3000,
+                                         updating='deferred',
+                                         workers=-1,
+                                         disp=False,  # step cost_function value
+                                         polish=True
+                                         )
+            resx0.append(res.x[0])
+            resx1.append(res.x[1])
+            resx2.append(res.x[2])
+        resx0 = array(resx0)
+        resx1 = array(resx1)
+        resx2 = array(resx2)
+
         wh.write(sampling.split('.txt')[0] + ' '
                  + d_sim + ' '
-                 + str(res.x[1] * 1e6) + ' '
-                 + str(res.x[2] * 1e6) + ' '
-                 + str(res.x[0] * 1e6) + '\n'
+                 + str(mean(resx1) * 1e6) + ' ' + str(std(resx1) * 1e6) + ' '
+                 + str(mean(resx2) * 1e6) + ' ' + str(std(resx2) * 1e6) + ' '
+                 + str(mean(resx0) * 1e6) + ' ' + str(std(resx0) * 1e6) + '\n'
                  )
