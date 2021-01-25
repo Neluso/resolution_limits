@@ -74,9 +74,12 @@ in_dir = './output/simulation_real_refs/2_layer/traces/'
 ref_dir = './sim_resources/refs/'
 t_ref, E_ref = read_1file(ref_dir + '100k_1.txt')
 f_ref, E_ref_w = fourier_analysis(t_ref, E_ref)
-plot(f_ref, toDb_0(E_ref_w))
-show()
-quit()
+# plot(f_ref, toDb_0(E_ref_w))
+# xlabel(r'$f\ (THz)$')
+# xlim([0, 3])
+# ylim([-80, 5])
+# show()
+# quit()
 data_base_dir = './sim_resources/polymer_database/'
 dir_list = os.listdir(in_dir)
 rows = len(dir_list)
