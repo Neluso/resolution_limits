@@ -44,12 +44,18 @@ def recover_material(freqs, material):  # ['ABS', 'HDPE', 'PA6', 'PAMD', 'PC', '
     return n, k
 
 
-def H_sim(freq, n_i, k_i, thick_i, n_o, k_o, thick_o, d_air):
+def H_sim(freq, n_i, k_i, thick_i, n_m, k_m, thick_m, n_o, k_o, thick_o, d_air):
     H_i = cr_l_1_l(n_subs, n_i - 1j * k_i)
 
-    rlm1l = cr_l_1_l(n_i - 1j * k_i, n_o - 1j * k_o)
-    tt = ct2(n_i - 1j * k_i, n_o - 1j * k_o)
+    rlm1l = cr_l_1_l(n_i - 1j * k_i, n_m - 1j * k_m)
+    tt = ct2(n_i - 1j * k_i, n_m - 1j * k_m)
     exp_phi = phase_factor(n_i, k_i, thick_i, freq)
+
+    H_i = rlm1l + (tt * H_i * exp_phi) / (1 + rlm1l * H_i * exp_phi)
+
+    rlm1l = cr_l_1_l(n_m - 1j * k_m, n_o - 1j * k_o)
+    tt = ct2(n_m - 1j * k_m, n_o - 1j * k_o)
+    exp_phi = phase_factor(n_m, k_m, thick_m, freq)
 
     H_i = rlm1l + (tt * H_i * exp_phi) / (1 + rlm1l * H_i * exp_phi)
 
@@ -63,22 +69,22 @@ def H_sim(freq, n_i, k_i, thick_i, n_o, k_o, thick_o, d_air):
 
 
 def cost_function(params, *args):
-    d_air, thick_i, thick_o = params
-    E_sam, E_ref_w, freqs, n_i, k_i, n_o, k_o = args
-    H_teo = H_sim(freqs, n_i, k_i, thick_i, n_o, k_o, thick_o, d_air)
+    d_air, thick_i, thick_m, thick_o = params
+    E_sam, E_ref_w, freqs, n_i, k_i, n_m, k_m, n_o, k_o = args
+    H_teo = H_sim(freqs, n_i, k_i, thick_i, n_m, k_m, thick_m, n_o, k_o, thick_o, d_air)
     E_teo = irfft(H_teo * E_ref_w)
     return sum((E_sam - E_teo) ** 2)
 
 
 t0 = time_ns()
-in_dir = './output/simulation_real_refs/2_layer/traces/'
+in_dir = './output/simulation_real_refs/3_layer/traces/'
 ref_dir = './sim_resources/refs/'
 data_base_dir = './sim_resources/polymer_database/'
 dir_list = os.listdir(in_dir)
-wh = open('./output/simulation_real_refs/2_layer/results.txt', 'a')
+wh = open('./output/simulation_real_refs/3_layer/results.txt', 'a')
 if __name__ == '__main__':
     for trace in dir_list:
-        d_sim, mat_i, mat_o, sampling = trace.split('_')
+        d_sim, mat_i, mat_m, mat_o, sampling = trace.split('_')
         t_ref, E_ref = read_1file(ref_dir + sampling.replace('k', 'k_2'))
         t_sam, E_sam = read_1file(in_dir + trace)
         t_ref *= 1e-12
@@ -86,9 +92,11 @@ if __name__ == '__main__':
         f_ref, E_ref_w = fourier_analysis(t_ref, E_ref)
         f_sam, E_sam_w = fourier_analysis(t_ref, E_ref)
         n_i, k_i = recover_material(f_ref, mat_i)
+        n_m, k_m = recover_material(f_ref, mat_m)
         n_o, k_o = recover_material(f_ref, mat_o)
         k_bounds = [
             (-1e-3, 1e-3),  # d_air
+            (0, 1e-3),  # d_mat
             (0, 1e-3),  # d_mat
             (0, 1e-3)  # d_mat
         ]
@@ -97,10 +105,11 @@ if __name__ == '__main__':
         resx0 = list()
         resx1 = list()
         resx2 = list()
+        resx3 = list()
         for i in range(num_statistics):
             res = differential_evolution(cost_function,
                                          k_bounds,
-                                         args=(E_sam, E_ref_w, f_ref, n_i, k_i, n_o, k_o),
+                                         args=(E_sam, E_ref_w, f_ref, n_i, k_i, n_m, k_m, n_o, k_o),
                                          popsize=30,
                                          # maxiter=3000,
                                          updating='deferred',
@@ -111,13 +120,16 @@ if __name__ == '__main__':
             resx0.append(res.x[0])
             resx1.append(res.x[1])
             resx2.append(res.x[2])
+            resx3.append(res.x[3])
         resx0 = array(resx0)
         resx1 = array(resx1)
         resx2 = array(resx2)
+        resx3 = array(resx3)
 
         wh.write(sampling.split('.txt')[0] + ' '
                  + d_sim + ' '
                  + str(mean(resx1) * 1e6) + ' ' + str(std(resx1) * 1e6) + ' '
                  + str(mean(resx2) * 1e6) + ' ' + str(std(resx2) * 1e6) + ' '
+                 + str(mean(resx3) * 1e6) + ' ' + str(std(resx3) * 1e6) + ' '
                  + str(mean(resx0) * 1e6) + ' ' + str(std(resx0) * 1e6) + '\n'
                  )

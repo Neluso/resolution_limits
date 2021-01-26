@@ -43,12 +43,18 @@ def recover_material(freqs, material):  # ['ABS', 'HDPE', 'PA6', 'PAMD', 'PC', '
     return n, k
 
 
-def H_sim(freq, n_i, k_i, thick_i, n_o, k_o, thick_o, d_air):
+def H_sim(freq, n_i, k_i, thick_i, n_m, k_m, thick_m, n_o, k_o, thick_o, d_air):
     H_i = cr_l_1_l(n_subs, n_i - 1j * k_i)
 
-    rlm1l = cr_l_1_l(n_i - 1j * k_i, n_o - 1j * k_o)
-    tt = ct2(n_i - 1j * k_i, n_o - 1j * k_o)
+    rlm1l = cr_l_1_l(n_i - 1j * k_i, n_m - 1j * k_m)
+    tt = ct2(n_i - 1j * k_i, n_m - 1j * k_m)
     exp_phi = phase_factor(n_i, k_i, thick_i, freq)
+
+    H_i = rlm1l + (tt * H_i * exp_phi) / (1 + rlm1l * H_i * exp_phi)
+
+    rlm1l = cr_l_1_l(n_m - 1j * k_m, n_o - 1j * k_o)
+    tt = ct2(n_m - 1j * k_m, n_o - 1j * k_o)
+    exp_phi = phase_factor(n_m, k_m, thick_m, freq)
 
     H_i = rlm1l + (tt * H_i * exp_phi) / (1 + rlm1l * H_i * exp_phi)
 
@@ -61,9 +67,9 @@ def H_sim(freq, n_i, k_i, thick_i, n_o, k_o, thick_o, d_air):
     return exp(- 1j * 2 * 2 * pi * freq * d_air / c_0) * H_i
 
 
-def sim_traces(mat_i, mat_o):
+def sim_traces(mat_i, mat_m, mat_o):
     t0 = time_ns()
-    out_dir = './output/simulation_real_refs/2_layer/traces/'
+    out_dir = './output/simulation_real_refs/3_layer/traces/'
     if not os.path.isdir(out_dir):
         os.mkdir(out_dir)
     in_dir = './sim_resources/refs/'
@@ -74,11 +80,12 @@ def sim_traces(mat_i, mat_o):
             t_ref *= 1e-12
             f_ref, E_ref_w = fourier_analysis(t_ref, E_ref)  # f_ref in THz
             n_i, k_i = recover_material(f_ref, mat_i)
+            n_m, k_m = recover_material(f_ref, mat_m)
             n_o, k_o = recover_material(f_ref, mat_o)
             for d_mat in pow(10, arange(-1, 3, 1 / 4)):
-                name_trace = str(d_mat) + '_' + mat_i + '_' + mat_o + '_' + ref_file.replace('_1', '')
+                name_trace = str(d_mat) + '_' + mat_i + '_' + mat_m + '_' + mat_o + '_' + ref_file.replace('_1', '')
                 d_mat *= 1e-6  # um
-                H_sim_teo = H_sim(f_ref, n_i, k_i, d_mat, n_o, k_o, d_mat, 0.0)
+                H_sim_teo = H_sim(f_ref, n_i, k_i, d_mat, n_m, k_m, d_mat, n_o, k_o, d_mat, 0.0)
                 E_sim_w = H_sim_teo * E_ref_w
                 E_sim = irfft(E_sim_w)
                 tw = open(out_dir + name_trace, 'w')
@@ -90,7 +97,5 @@ def sim_traces(mat_i, mat_o):
     return 0
 
 
-# sim_traces('PFTE', 'PA6')  # ['ABS', 'HDPE', 'PA6', 'PAMD', 'PC', 'PET', 'PFTE', 'PMMA', 'PP']
-# sim_traces('PET', 'PC')  # ['ABS', 'HDPE', 'PA6', 'PAMD', 'PC', 'PET', 'PFTE', 'PMMA', 'PP']
-# sim_traces('PFTE', 'PP')  # ['ABS', 'HDPE', 'PA6', 'PAMD', 'PC', 'PET', 'PFTE', 'PMMA', 'PP']
-sim_traces('PET', 'PP')  # ['ABS', 'HDPE', 'PA6', 'PAMD', 'PC', 'PET', 'PFTE', 'PMMA', 'PP']
+# sim_traces('PFTE', 'PA6', 'PP')  # ['ABS', 'HDPE', 'PA6', 'PAMD', 'PC', 'PET', 'PFTE', 'PMMA', 'PP']
+sim_traces('PET', 'PC', 'ABS')  # ['ABS', 'HDPE', 'PA6', 'PAMD', 'PC', 'PET', 'PFTE', 'PMMA', 'PP']
