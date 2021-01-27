@@ -93,14 +93,18 @@ if __name__ == '__main__':
             (0, 1e-3)  # d_mat
         ]
         print(trace)
-        num_statistics = 3
+        num_statistics = 10
+        delta_error = 0.01
+        error_mod = 1 + delta_error * (2 * random.rand(num_statistics) - 1)
         resx0 = list()
         resx1 = list()
         resx2 = list()
         for i in range(num_statistics):
             res = differential_evolution(cost_function,
                                          k_bounds,
-                                         args=(E_sam, E_ref_w, f_ref, n_i, k_i, n_o, k_o),
+                                         args=(E_sam, E_ref_w, f_ref,
+                                               n_i * error_mod[i], k_i * error_mod[i],
+                                               n_o * error_mod[i], k_o * error_mod[i]),
                                          popsize=30,
                                          # maxiter=3000,
                                          updating='deferred',
