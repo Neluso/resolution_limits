@@ -81,6 +81,12 @@ if __name__ == '__main__':
         d_sim, mat_i, mat_o, sampling = trace.split('_')
         t_ref, E_ref = read_1file(ref_dir + sampling.replace('k', 'k_2'))
         t_sam, E_sam = read_1file(in_dir + trace)
+        enlargement = 2 * t_ref.size
+        delta_t_ref = mean(diff(t_ref))
+        E_ref = zero_padding(E_ref, 0, enlargement)
+        t_ref = concatenate((t_ref, t_ref[-1] * ones(enlargement) + delta_t_ref * arange(1, enlargement + 1)))
+        E_sam = zero_padding(E_sam, 0, enlargement)
+        t_sam = concatenate((t_sam, t_sam[-1] * ones(enlargement) + delta_t_ref * arange(1, enlargement + 1)))
         t_ref *= 1e-12
         t_sam *= 1e-12
         f_ref, E_ref_w = fourier_analysis(t_ref, E_ref)
@@ -93,8 +99,8 @@ if __name__ == '__main__':
             (0, 1e-3)  # d_mat
         ]
         print(trace)
-        num_statistics = 10
-        delta_error = 0.01
+        num_statistics = 3
+        delta_error = 0.0
         error_mod = 1 + delta_error * (2 * random.rand(num_statistics) - 1)
         resx0 = list()
         resx1 = list()

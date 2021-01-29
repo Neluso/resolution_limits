@@ -71,6 +71,39 @@ def cost_function(params, *args):
     return sum((E_sam - E_teo) ** 2)
 
 
+def plot_data(data_2_plot):
+    fig, axs = subplots(2, 1, sharex=True, gridspec_kw={
+        'height_ratios': [3, 1]})
+    fig.subplots_adjust(hspace=0)
+    # ax = fig.add_subplot(2, 1, 1)
+    # d_sims = data[16 * i:16 * i + 15, 1]
+    # d_fits_inner = data[16 * i:16 * i + 15, 2]
+    # d_fint_outer = data[16 * i:16 * i + 15, 4]
+    d_sims = data_2_plot[:, 1]
+    d_fits_inner = data_2_plot[:, 2]
+    d_fint_outer = data_2_plot[:, 4]
+    axs[0].loglog(sort(d_sims), sort(d_sims), 'k-', lw=0.8, label='sims')
+    axs[0].loglog(d_sims, d_fits_inner, '.', label='inner')
+    axs[0].loglog(d_sims, d_fint_outer, '.', label='outer')
+    # title(data[8 * i, 0])
+    axs[0].legend()
+    axs[0].set_ylabel(r'$d_{fit}\ (\mu m)$')
+    # axs[0].set_box_aspect(1/0.2)
+    # axs[1].loglog(sort(data[16 * i:16 * i + 15, 1]), sort(data[16 * i:16 * i + 15, 1]), 'k-', lw=0.8, label='sims')
+    axs[1].loglog(d_sims, abs(d_sims - d_fits_inner) / d_sims, '.')
+    axs[1].loglog(d_sims, abs(d_sims - d_fint_outer) / d_sims, '.')
+    axs[1].loglog(d_sims, ones(d_sims.size), 'k-', lw=0.5, label='0')
+    # axs[1].loglog(d_sims, 10 * ones(d_sims.size), 'r-', lw=0.8, label=r'$10\ \mu m$')
+    # axs[1].legend()
+    axs[1].set_ylabel('desv')
+    # axs[0].set_box_aspect(0.999)
+    # axs[1].set_box_aspect(0.001)
+
+    xlabel(r'$d_{sim}\ (\mu m)$')
+    savefig(out_dir + str(data[16 * i, 0]).replace('.0', '') + '.pdf')
+    return 0
+
+
 in_dir = './output/simulation_real_refs/2_layer/traces/'
 out_dir = './output/simulation_real_refs/2_layer/'
 ref_dir = './sim_resources/refs/'
@@ -99,34 +132,29 @@ for line in fh:
 
 data = array(data)
 
-sort_idxs = argsort(data, axis=0)[:, 0]
-data = data[sort_idxs]
-for i in range(4):
-    # fig = figure(i+1)
-    fig, axs = subplots(2, 1, sharex=True, gridspec_kw={
-                           'height_ratios': [3, 1]})
-    fig.subplots_adjust(hspace=0)
-    # ax = fig.add_subplot(2, 1, 1)
-    d_sims = data[16 * i:16 * i + 15, 1]
-    d_fits_inner = data[16 * i:16 * i + 15, 2]
-    d_fint_outer = data[16 * i:16 * i + 15, 4]
-    axs[0].loglog(sort(d_sims), sort(d_sims), 'k-', lw=0.8, label='sims')
-    axs[0].loglog(d_sims, d_fits_inner, '.', label='inner')
-    axs[0].loglog(d_sims, d_fint_outer, '.', label='outer')
-    # title(data[8 * i, 0])
-    axs[0].legend()
-    axs[0].set_ylabel(r'$d_{fit}\ (\mu m)$')
-    # axs[0].set_box_aspect(1/0.2)
-    # axs[1].loglog(sort(data[16 * i:16 * i + 15, 1]), sort(data[16 * i:16 * i + 15, 1]), 'k-', lw=0.8, label='sims')
-    axs[1].loglog(d_sims, abs(d_sims - d_fits_inner) / d_sims, '.')
-    axs[1].loglog(d_sims, abs(d_sims - d_fint_outer) / d_sims, '.')
-    axs[1].loglog(d_sims, ones(d_sims.size), 'k-', lw=0.5, label='0')
-    # axs[1].loglog(d_sims, 10 * ones(d_sims.size), 'r-', lw=0.8, label=r'$10\ \mu m$')
-    # axs[1].legend()
-    axs[1].set_ylabel('desv')
-    # axs[0].set_box_aspect(0.999)
-    # axs[1].set_box_aspect(0.001)
+# sort_idxs = argsort(data, axis=0)[:, 0]
+# data = data[sort_idxs]
 
-    xlabel(r'$d_{sim}\ (\mu m)$')
-    savefig(out_dir + str(data[16 * i, 0]).replace('.0','') + '.pdf')
+data_10 = list()
+data_50 = list()
+data_100 = list()
+data_200 = list()
+
+for row in data:
+    if row[0] == 10:
+        data_10.append(row)
+    if row[0] == 50:
+        data_50.append(row)
+    if row[0] == 100:
+        data_100.append(row)
+    if row[0] == 200:
+        data_200.append(row)
+data_10 = array(data_10)
+data_50 = array(data_50)
+data_100 = array(data_100)
+data_200 = array(data_200)
+
+plot_data(data_10)
+plot_data(data_50)
+
 show()
