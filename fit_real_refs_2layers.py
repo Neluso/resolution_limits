@@ -71,6 +71,7 @@ def cost_function(params, *args):
 
 
 t0 = time_ns()
+traces_done = 0
 in_dir = './output/simulation_real_refs/2_layer/traces/'
 ref_dir = './sim_resources/refs/'
 data_base_dir = './sim_resources/polymer_database/'
@@ -78,10 +79,11 @@ dir_list = os.listdir(in_dir)
 wh = open('./output/simulation_real_refs/2_layer/results.txt', 'a')
 if __name__ == '__main__':
     for trace in dir_list:
-        d_sim, mat_i, mat_o, sampling = trace.split('_')
-        t_ref, E_ref = read_1file(ref_dir + sampling.replace('k', 'k_2'))
+        # d_sim, mat_i, mat_o, sampling = trace.split('_')
+        d_sim, n_i_eff, n_o_eff, dispersion, k_eff_prima, sampling = trace.split('_')
+        t_ref, E_ref = read_1file(ref_dir + sampling.replace('k', 'k_1'))  # k_2
         t_sam, E_sam = read_1file(in_dir + trace)
-        enlargement = 2 * t_ref.size
+        enlargement = 5 * t_ref.size
         delta_t_ref = mean(diff(t_ref))
         E_ref = zero_padding(E_ref, 0, enlargement)
         t_ref = concatenate((t_ref, t_ref[-1] * ones(enlargement) + delta_t_ref * arange(1, enlargement + 1)))
@@ -91,15 +93,21 @@ if __name__ == '__main__':
         t_sam *= 1e-12
         f_ref, E_ref_w = fourier_analysis(t_ref, E_ref)
         f_sam, E_sam_w = fourier_analysis(t_ref, E_ref)
-        n_i, k_i = recover_material(f_ref, mat_i)
-        n_o, k_o = recover_material(f_ref, mat_o)
+        # n_i, k_i = recover_material(f_ref, mat_i)
+        # n_o, k_o = recover_material(f_ref, mat_o)
+        f_ref *= 1e-12
+        n_i = float(n_i_eff) + float(dispersion) * f_ref
+        n_o = float(n_o_eff)  # + float(dispersion) * f_ref
+        k_i = float(k_eff_prima) * f_ref
+        k_o = float(k_eff_prima) * f_ref
+        f_ref *= 1e12
         k_bounds = [
             (-1e-3, 1e-3),  # d_air
             (0, 1e-3),  # d_mat
             (0, 1e-3)  # d_mat
         ]
         print(trace)
-        num_statistics = 3
+        num_statistics = 5
         delta_error = 0.0
         error_mod = 1 + delta_error * (2 * random.rand(num_statistics) - 1)
         resx0 = list()
@@ -127,6 +135,7 @@ if __name__ == '__main__':
 
         wh.write(sampling.split('.txt')[0] + ' '
                  + d_sim + ' '
+                 + n_i_eff + ' ' + n_o_eff + ' ' + dispersion + ' ' + k_eff_prima + ' '
                  + str(mean(resx1) * 1e6) + ' ' + str(std(resx1) * 1e6) + ' '
                  + str(mean(resx2) * 1e6) + ' ' + str(std(resx2) * 1e6) + ' '
                  + str(mean(resx0) * 1e6) + ' ' + str(std(resx0) * 1e6) + '\n'

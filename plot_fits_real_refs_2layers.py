@@ -79,9 +79,11 @@ def plot_data(data_2_plot):
     # d_sims = data[16 * i:16 * i + 15, 1]
     # d_fits_inner = data[16 * i:16 * i + 15, 2]
     # d_fint_outer = data[16 * i:16 * i + 15, 4]
+    # print(data_2_plot[:, 1])
+    # quit()
     d_sims = data_2_plot[:, 1]
-    d_fits_inner = data_2_plot[:, 2]
-    d_fint_outer = data_2_plot[:, 4]
+    d_fits_inner = data_2_plot[:, 6]
+    d_fint_outer = data_2_plot[:, 8]
     axs[0].loglog(sort(d_sims), sort(d_sims), 'k-', lw=0.8, label='sims')
     axs[0].loglog(d_sims, d_fits_inner, '.', label='inner')
     axs[0].loglog(d_sims, d_fint_outer, '.', label='outer')
@@ -92,7 +94,7 @@ def plot_data(data_2_plot):
     # axs[1].loglog(sort(data[16 * i:16 * i + 15, 1]), sort(data[16 * i:16 * i + 15, 1]), 'k-', lw=0.8, label='sims')
     axs[1].loglog(d_sims, abs(d_sims - d_fits_inner) / d_sims, '.')
     axs[1].loglog(d_sims, abs(d_sims - d_fint_outer) / d_sims, '.')
-    axs[1].loglog(d_sims, ones(d_sims.size), 'k-', lw=0.5, label='0')
+    axs[1].loglog(d_sims, 0.1 * ones(d_sims.size), 'k-', lw=0.5, label='0')
     # axs[1].loglog(d_sims, 10 * ones(d_sims.size), 'r-', lw=0.8, label=r'$10\ \mu m$')
     # axs[1].legend()
     axs[1].set_ylabel('desv')
@@ -100,11 +102,20 @@ def plot_data(data_2_plot):
     # axs[1].set_box_aspect(0.001)
 
     xlabel(r'$d_{sim}\ (\mu m)$')
-    savefig(out_dir + str(data[16 * i, 0]).replace('.0', '') + '.pdf')
+    # savefig(out_dir + str(data[8 * i, 0]).replace('.0', '') + '.pdf')
+    return 0
+
+
+def get_whole():
     return 0
 
 
 in_dir = './output/simulation_real_refs/2_layer/traces/'
+# for file in os.listdir(in_dir):
+#     t_sam, E_sam = read_1file(in_dir + file)
+#     plot(t_sam, E_sam)
+# show()
+# quit()
 out_dir = './output/simulation_real_refs/2_layer/'
 ref_dir = './sim_resources/refs/'
 t_ref, E_ref = read_1file(ref_dir + '100k_1.txt')
@@ -118,7 +129,6 @@ f_ref, E_ref_w = fourier_analysis(t_ref, E_ref)
 data_base_dir = './sim_resources/polymer_database/'
 dir_list = os.listdir(in_dir)
 rows = len(dir_list)
-columns = 8
 data = list()
 fh = open('./output/simulation_real_refs/2_layer/results.txt', 'r')
 i = 0
@@ -126,35 +136,72 @@ for line in fh:
     line = line.replace('\n', '')
     line = line.replace('k', '')
     line = line.split(' ')
-    for j in range(columns):
-        line[j] = float(line[j])
-    data.append(tuple(line))
+    line_float = list()
+    for j in range(len(line)):
+        line_float.append(round(float(line[j]), 2))
+    data.append(tuple(line_float))
 
 data = array(data)
 
 # sort_idxs = argsort(data, axis=0)[:, 0]
 # data = data[sort_idxs]
 
+data_0 = list()
+data_5 = list()
 data_10 = list()
-data_50 = list()
-data_100 = list()
-data_200 = list()
+data_15 = list()
+data_20 = list()
+data_25 = list()
+data_30 = list()
+data_35 = list()
+data_40 = list()
+data_45 = list()
 
 for row in data:
-    if row[0] == 10:
+    if row[4] == 0.0:
+        data_0.append(row)
+    if row[4] == -0.05:
+        data_5.append(row)
+    if row[4] == -0.1:
         data_10.append(row)
-    if row[0] == 50:
-        data_50.append(row)
-    if row[0] == 100:
-        data_100.append(row)
-    if row[0] == 200:
-        data_200.append(row)
-data_10 = array(data_10)
-data_50 = array(data_50)
-data_100 = array(data_100)
-data_200 = array(data_200)
+    if row[4] == -0.15:
+        data_15.append(row)
+    if row[4] == -0.2:
+        data_20.append(row)
+    if row[4] == -0.25:
+        data_25.append(row)
+    if row[4] == -0.3:
+        data_30.append(row)
+    if row[4] == -0.35:
+        data_35.append(row)
+    if row[4] == -0.40:
+        data_40.append(row)
+    if row[4] == -0.45:
+        data_45.append(row)
 
+
+data_0 = array(data_0)
+data_5 = array(data_5)
+data_10 = array(data_10)
+data_15 = array(data_15)
+data_20 = array(data_20)
+data_25 = array(data_25)
+data_30 = array(data_30)
+data_35 = array(data_35)
+data_40 = array(data_40)
+data_45 = array(data_45)
+
+
+plot_data(data_0)
+plot_data(data_5)
 plot_data(data_10)
-plot_data(data_50)
+plot_data(data_15)
+plot_data(data_20)
+plot_data(data_25)
+plot_data(data_30)
+# plot_data(data_35)
+# plot_data(data_40)
+# plot_data(data_45)
+# plot_data(data_50)
 
 show()

@@ -90,7 +90,48 @@ def sim_traces(mat_i, mat_o):
     return 0
 
 
+def sim_traces_v2(n_i_eff, n_o_eff, dispersion, k_eff_prima):
+    out_dir = './output/simulation_real_refs/2_layer/traces/'
+    if not os.path.isdir(out_dir):
+        os.mkdir(out_dir)
+    in_dir = './sim_resources/refs/'
+    ref_file = '100k_1.txt'
+    t_ref, E_ref = read_1file(in_dir + ref_file)  # t_ref in ps
+    t_ref *= 1e-12
+    f_ref, E_ref_w = fourier_analysis(t_ref, E_ref)  # f_ref in THz
+    f_ref *= 1e-12
+    n_i = n_i_eff + dispersion * f_ref
+    n_o = n_o_eff + dispersion * f_ref
+    k_i = k_eff_prima * f_ref
+    k_o = k_eff_prima * f_ref
+    figure()
+    plot(f_ref, n_i, f_ref, n_o)
+    figure()
+    plot(f_ref, k_i, f_ref, k_o)
+    show()
+    quit()
+    f_ref *= 1e12
+    step_d_sim = 1 / 6
+    for d_mat in pow(10, arange(0, 2. + step_d_sim, step_d_sim)):
+    # for d_mat in [1, pow(10, )]:
+        name_trace = str(d_mat) + '_' + str(n_i_eff) + '_' + str(n_o_eff) + '_' + str(dispersion) + '_' +\
+                     str(k_eff_prima) + '_' + ref_file.replace('_1', '')
+        d_mat *= 1e-6  # um
+        H_sim_teo = H_sim(f_ref, n_i, k_i, d_mat, n_o, k_o, d_mat, 0.0)
+        E_sim_w = H_sim_teo * E_ref_w
+        E_sim = irfft(E_sim_w)
+        tw = open(out_dir + name_trace, 'w')
+        for i in range(E_sim.size):
+            tw.write(str(t_ref[i] * 1e12) + ',' + str(E_sim[i]) + '\n')
+        tw.close()
+    return 0
+
+
 # sim_traces('PFTE', 'PA6')  # ['ABS', 'HDPE', 'PA6', 'PAMD', 'PC', 'PET', 'PFTE', 'PMMA', 'PP']
 # sim_traces('PET', 'PC')  # ['ABS', 'HDPE', 'PA6', 'PAMD', 'PC', 'PET', 'PFTE', 'PMMA', 'PP']
 # sim_traces('PFTE', 'PP')  # ['ABS', 'HDPE', 'PA6', 'PAMD', 'PC', 'PET', 'PFTE', 'PMMA', 'PP']
-sim_traces('PET', 'PP')  # ['ABS', 'HDPE', 'PA6', 'PAMD', 'PC', 'PET', 'PFTE', 'PMMA', 'PP']
+# sim_traces('PET', 'PP')  # ['ABS', 'HDPE', 'PA6', 'PAMD', 'PC', 'PET', 'PFTE', 'PMMA', 'PP']
+
+
+for disps in range(3, 7):
+    sim_traces_v2(1.4, 1.6, - 0.005 * disps, 0.025)
