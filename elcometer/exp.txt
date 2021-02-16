@@ -1,0 +1,6 @@
+morat 23.6 um polyester
+cian 50.0 um polyester
+marró 123.2 um polyester
+blanc 244.8 um polyester
+negre 463 um Rigid PVC (Cobex)
+gris 978 um polyester o PC (policarbonato)
