@@ -126,7 +126,7 @@ if __name__ == '__main__':
                                              k_bounds,
                                              args=(E_sam, E_ref_w, f_ref, n * error_mod[i], k * error_mod[i]),
                                              # popsize=30,
-                                             # maxiter=3000,
+                                             maxiter=3000,
                                              updating='deferred',
                                              workers=-1,
                                              disp=False,  # step cost_function value
