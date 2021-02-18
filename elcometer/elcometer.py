@@ -65,7 +65,8 @@ def cost_function(params, *args):
 
 
 t0 = time_ns()
-name_file = 'morat'
+name_file = 'blanc'
+d_sam = 244.8e-6
 cfh = open('./calibration_polyester.txt')
 freq_cal = list()
 n_cal = list()
@@ -110,7 +111,7 @@ if __name__ == '__main__':
         n = n_intplt(f_ref)
         k = 1e-10 * c_0 * alpha_intplt(f_ref) / (4 * pi * f_ref + eps)
 
-        num_statistics = 5
+        num_statistics = 25
         # delta_error = 0.0
         # error_mod = 1 + delta_error * (2 * random.rand(num_statistics) - 1)
         resx0 = list()
@@ -121,8 +122,8 @@ if __name__ == '__main__':
             res = differential_evolution(cost_function,
                                          k_bounds,
                                          args=(E_sam, E_ref_w, f_ref, n, k),
-                                         popsize=30,
-                                         # maxiter=3000,
+                                         popsize=45,
+                                         maxiter=3000,
                                          updating='deferred',
                                          workers=-1,
                                          disp=False,  # step cost_function value
@@ -140,7 +141,7 @@ if __name__ == '__main__':
         # print('n = ', mean(resx1), '+-', std(resx1))
         # print('k = ', mean(resx2), '+-', std(resx2))
         print('d = ', mean(resx3), '+-', std(resx3))
-        H_teo = H_sim(f_ref, n, k, 23.6e-6, - 23.6e-6)
+        H_teo = H_sim(f_ref, n, k, d_sam, - d_sam)
         plot(t_sam, E_sam)
         plot(t_ref, - irfft(H_teo * E_ref_w))
         show()
