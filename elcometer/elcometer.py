@@ -115,7 +115,7 @@ if __name__ == '__main__':
             k = 1e-10 * c_0 * alpha_intplt(f_ref) / (4 * pi * f_ref + eps)
 
             num_statistics = 50
-            delta_error = 0.01
+            delta_error = 0.02
             error_mod = 1 + delta_error * (2 * random.rand(num_statistics) - 1)
             resx0 = list()
             # resx1 = list()
