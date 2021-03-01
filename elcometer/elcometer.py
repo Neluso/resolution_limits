@@ -57,14 +57,17 @@ def H_sim(freq, n, k, thick, d_air):  # n = 1.8, alpha
 
 
 def cost_function(params, *args):
+    # d_air, thick, correct_n, correct_k = params
     d_air, thick = params
     E_sam, E_ref_w, freqs, n, k = args
+    # H_teo = H_sim(freqs, n * correct_n, k * correct_k, thick, d_air)
     H_teo = H_sim(freqs, n, k, thick, d_air)
     E_teo = - irfft(H_teo * E_ref_w)
     return sum((E_sam - E_teo) ** 2)
 
 
 t0 = time_ns()
+delta_error = 0.05
 name_files = ['morat', 'cian', 'marro', 'blanc']  # , 'negre', 'gris']
 d_film = {'morat': 23.6e-6, 'cian': 50.0e-6, 'marro': 123.2e-6, 'blanc': 244.8e-6, 'negre': 463e-6, 'gris': 978e-6}
 mat_film = {'morat': 'polyester', 'cian': 'polyester', 'marro': 'polyester', 'blanc': 'polyester', 'negre': 463e-6, 'gris': 978e-6}
@@ -106,16 +109,15 @@ if __name__ == '__main__':
 
             k_bounds = [
                 (-1e-3, 1e-3),  # d_air
-                # (1.79, 1.81),  # n
-                # (0, 1),  # k
                 (1e-6, 1e-3)  # thickness
+                # , (0.9, 1.1),  # n
+                # (0.9, 1.1)  # k
             ]
 
             n = n_intplt(f_ref)
             k = 1e-10 * c_0 * alpha_intplt(f_ref) / (4 * pi * f_ref + eps)
 
             num_statistics = 50
-            delta_error = 0.02
             error_mod = 1 + delta_error * (2 * random.rand(num_statistics) - 1)
             resx0 = list()
             # resx1 = list()
@@ -125,7 +127,7 @@ if __name__ == '__main__':
                 res = differential_evolution(cost_function,
                                              k_bounds,
                                              args=(E_sam, E_ref_w, f_ref, n * error_mod[i], k * error_mod[i]),
-                                             # popsize=30,
+                                             popsize=30,
                                              maxiter=3000,
                                              updating='deferred',
                                              workers=-1,

@@ -142,7 +142,7 @@ if __name__ == '__main__':
         (0, 1e-3)  # d_mat
     ]
     num_statistics = 10
-    delta_error = 0.0
+    delta_error = 0.01
     error_mod = 1 + delta_error * (2 * random.rand(num_statistics) - 1)
     resx0 = list()
     resx1 = list()
